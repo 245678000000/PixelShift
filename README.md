@@ -30,7 +30,16 @@
 
 ![裁切](docs/crop.png)
 
-## 安装与构建
+## 下载
+
+到 [Releases](https://github.com/245678000000/PixelShift/releases/latest) 下载 `PixelShift-x.x.zip`，解压后把 `PixelShift.app` 拖进「应用程序」文件夹。支持 Apple Silicon 和 Intel，需要 macOS 14 或更高版本。
+
+应用没有经过 Apple 公证，第一次打开时 macOS 可能提示"无法验证开发者"或"已损坏"。可以任选一种方法解决：
+
+- 在 Finder 里右键 `PixelShift.app` →「打开」→ 再点「打开」；或者
+- 在终端运行：`xattr -cr /Applications/PixelShift.app`
+
+## 从源码构建
 
 只需要 Xcode Command Line Tools，不需要完整的 Xcode：
 
@@ -42,9 +51,7 @@ cd PixelShift
 open build/PixelShift.app
 ```
 
-构建产物在 `build/PixelShift.app`，可以拖进「应用程序」文件夹。脚本使用 ad-hoc 签名，首次打开如果被系统拦截，在 Finder 里右键 →「打开」即可。
-
-> 默认构建 Apple Silicon（arm64）版本。Intel Mac 请把 `build.sh` 里的 `-target arm64-apple-macos14.0` 改为 `x86_64-apple-macos14.0`。
+构建产物在 `build/PixelShift.app`，是同时支持 Apple Silicon 和 Intel 的通用二进制。运行 `./build.sh --zip` 会额外打一个发布用的 zip 包。
 
 ## 使用
 
