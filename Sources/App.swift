@@ -5,6 +5,7 @@ import AppKit
 struct PixelShiftApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var store = TaskStore.shared
+    @AppStorage("update.auto") private var autoUpdate = true
 
     var body: some Scene {
         Window("PixelShift", id: "main") {
@@ -20,6 +21,10 @@ struct PixelShiftApp: App {
         .defaultSize(width: 760, height: 480)
         .keyboardShortcut("y", modifiers: .command)
         .commands {
+            CommandGroup(after: .appInfo) {
+                Button("检查更新…") { Task { await Updater.shared.check(userInitiated: true) } }
+                Toggle("自动检查更新", isOn: $autoUpdate)
+            }
             CommandGroup(replacing: .newItem) {
                 Button("添加文件…") { store.openPanel() }.keyboardShortcut("o")
             }
@@ -41,6 +46,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
            let icon = NSImage(contentsOf: url) {
             NSApp.applicationIconImage = icon
         }
+        Task { @MainActor in Updater.shared.checkOnLaunch() }
     }
     func application(_ application: NSApplication, open urls: [URL]) {
         Task { @MainActor in TaskStore.shared.add(urls) }
